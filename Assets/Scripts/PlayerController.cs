@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float playerSpeed = 5.5f;
     //Variable para la fuerza del salto
     public float jumpForce = 3f;
+ 
 
     //Variable para acceder al SpriteRenderer
     private SpriteRenderer spriteRenderer;
@@ -15,6 +16,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rBody;
     //Variable para acceder al GroundSensor
     private GroundSensor sensor;
+    //variable para acceder al Animator
+    private Animator anim;
 
     //Variable para almacenar el input de movimiento
     float horizontal;
@@ -27,10 +30,12 @@ public class PlayerController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         //Asignamos la variable del Rigidbody2D con el componente que tiene este objeto
         rBody = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
         //Buscamos un Objeto por su nombre, cojemos el Componente GroundSensor de este objeto y lo asignamos a la variable
         sensor = GameObject.Find("GroundSensor").GetComponent<GroundSensor>();
         //Buscamos el objeto del GameManager y SFXManager lo asignamos a las variables
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();        
+        
     }
 
     // Update is called once per frame
@@ -38,7 +43,7 @@ public class PlayerController : MonoBehaviour
     {
         if(gameManager.isGameOver == false)
         {
-            horizontal = Input.GetAxis("horizontal");
+            horizontal = Input.GetAxis("Horizontal");
 
             if(horizontal < 0)
             {
@@ -53,8 +58,11 @@ public class PlayerController : MonoBehaviour
             if(Input.GetButtonDown("Jump") && sensor.isGrounded)
             {
                 rBody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                anim.SetBool("IsJumping", true);   
             }
-        }    
+        }
+
+        Movement();    
         
     }
 
@@ -106,8 +114,9 @@ public class PlayerController : MonoBehaviour
          if(Input.GetButtonDown("Jump") && sensor.isGrounded == true)
         {
                rBody.AddForce(new Vector2(0,1) * jumpForce, ForceMode2D.Impulse);   
-               anim.SetBool("IsJumping", true);
-               source.PlayOneShot(jumpSound);
+               anim.SetBool("Is Jumping", true);
+              
         }
          }  
 }
+
